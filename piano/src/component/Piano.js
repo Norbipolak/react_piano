@@ -281,3 +281,39 @@ function Piano() {
 }
 
 export default Piano;
+
+/*
+Leírás ugyanúgy mint ahogy a képeknél itt is a össze kell gyüjteni a file-neveket 
+ott egy tömb volt itt egy objektum a kulcsai azok amik a file-okban is szerepelnek "C2" stb a kulcsa jelenleg meg null 
+
+de viszont, hogy itt meg tudjunk adni mindegyiknek egy elérési útvonalat 
+mert a képeknél ott egyszerübb dolgunk volt, mert ott az elemeket egy for-ban olyan hosszúságú, mint a tömb 
+ott csináltuk meg az img-ket és annak img.src-jének meg megadtuk az elérési útvonalat 
+
+itt most csináltunk erre egy függvényt 
+createKeyPlayers 
+ahol a keys objektum meghívtuk az entries-t Object.entries(keys), ez visszaad egy tömböt tömbökkel, amiben vannak a kulcspárok 
+ezen az entries-eken végigmentünk 
+és belül pedig a keyValue[0] szóval az hogy C2 stb az lesz a keys-nek a kulcsa 
+az értéke meg a player lesz, ami egy new Audio(); és itt a loopban mindegyiknek megadjuk az elérési útvonalat 
+fontos, hogy ott is kell a keyValue[0]
+és akkor minden egyes loop-ban lesz egy kulcs ami a C2, D2 stb és ahhoz egy new Audio() mindegyiknek a saját src-jével!!!!!!!! 
+
+for(const keyValue of Object.entries(keys)) {
+    const player = new Audio();
+    player.src = řequire(`../piano_sounds/${keyValue[0].wav}`)
+    keys[keyValue[0]] = player
+}
+{C2: audio, C3: Audio ... }
+
+és még fontos, hogy a press meg a release függvény is vár egy note-ot megintcsak C2, D2 stb. minden elemnek külön meg van adva 
+
+A press-ben meghogy megvan, hogy mi az elérési útvonal, new Audio-val 
+és akkor így az összeset le tudjuk játszani, release ugyanez van csak ott meg a pause()-val megállítjuk 
+keys[note].play()
+keys[note].pause()
+itt ha pause van, akkor fontos, hogy a currentTime-ot is nullára állítsuk, hogy minden egyes kattimtásra újra induljon, ne onnan ahol abbahagyta
+
+jsx elemek függvénymeghívásakor meg egy arrow metódust használunk 
+onMouseDown={(e)=>press(e, "E3")} onMouseUp={(e)=>release(e, "E3")}>
+*/
