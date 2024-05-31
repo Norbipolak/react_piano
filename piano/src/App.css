@@ -1,0 +1,135 @@
+/*
+ha van egy komponensünk ott nem csináluunk külön egy css file-t hanem itt az App.css kitörlünk mindent és ide csináljuk meg!!! 
+
+lesz egy piano, ami egy grid szerkezet lesz, ahol meg fogjuk adni, hogy hány billentyű van -> 15 
+fontos, hogy itt a piano-ban kell megadni a width-et, ahol van a grid szerkezet és a white-key-ben pedig az elemek height-ját 
+nem jó -> 
+.piano {
+    display: grid;
+    grid-template-columns: repeat(15, 1fr);
+}
+
+.white-key {
+    width: 70px;
+    height: 350px;
+    background-color: white;
+    border: 2px solid #d2d2d2;
+}
+
+ha így csináljuk, akkor nem fognak összeérni a billentyűk 
+ez a jó 
+-> 
+.piano {
+    display: grid;
+    grid-template-columns: repeat(15, 1fr);
+    height: 800px;
+    margin: 15px auto;
+}
+
+.white-key {
+    height: 350px;
+    background-color: white;
+    border: 2px solid #d2d2d2;
+}
+**************
+meg lesznek ezen ilyen félbillentyűk a feketék, ott figyelni kell, hogy az elem amire itt a white-key annak position: relative-nek 
+kell lennie és majd a key-black-nek, ezeknek a fél billentyűk meg position: absolute!!!! és alapból ezek nem fognak látszani 
+mert így lesz jsx szerkezet, hogy benne lesznek 
+<div className="white-key">
+    <div className="black-key"></div>
+</div>
+
+azért ha azt akarjuk, hogyha fedésben vannak és a black-key legyen felül, akkor z-index-e nagyobb legyen, mint a white-key-nek
+.white-key {
+    height: 200px;
+    background-color: white;
+    border: 2px solid #d2d2d2;
+    margin-right: -2px; 
+    position: relative;
+}
+*/
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+.piano {
+    display: grid;
+    grid-template-columns: repeat(15, 1fr);
+    height: 800px;
+    margin: 15px auto;
+}
+
+.white-key {
+    height: 200px;
+    background-color: white;
+    border: 2px solid #d2d2d2;
+    margin-right: -2px; /*hogy ne duplikálódjanak a border-ek*/
+    position: relative;
+    cursor: pointer; /*fontos, hogy cursor: pointer legyen ha felé visszük az egeret, meg a black-key-nél is!!!*/
+}
+
+.black-key {
+  height: 150px;
+  background-color: #3c3c3c;
+  border: 2px solid #121212;
+  /*
+  itt be kell állítani a width-et, mert ez a black-key ez nem lesz olyan széles, mint a white-key meg el is lesz csusztatva
+  */
+  width: 28px; /*kb fele olyan széles lesz, mint a white-key*/
+  /*
+  Arrébb kell nekünk tolni, erre kell az, hogy position: absolute legyen és majd jobbra akarjuk tolni ezért a left-vel tudjuk valamilyen %-val 
+  vagy px-vel arrébbtolni!!! 
+  */
+  position: absolute;
+  /*
+  Annyival kell arrébb tolni, hogy a fele ennek a 28px-es szélességnek meg a fele a white 55px-es szélességének és akkor lesz a fele 
+  az egyik white billentyűn a másik fele meg a másik white billentyűn!!!! 
+  */
+  left: 38px; /*de 41.5px atz kicsit sok lett, ezért 38*/
+  /*
+  azért, mert becsuszott a másik alá z-index: 1; !!! 
+  */
+  z-index: 1;
+  cursor: pointer;
+}
+
+/*
+és az a lényeg, hogyha megnyomjuk a white-key akkor látszodjon ezért akkor más background-color-t illetve más border-t fog kapni!!! 
+de ezt nem úgy fogjuk megcsinálni, hogy pseudo osztály segítségével, hogy :active!!!  
+ez így nem lesz jó, hogy 
+.white-key:active {
+  background-color: #ededed;
+  border: 2px solid #bababa;
+}
+
+.black-key:active {
+  background-color:#5b5b5b;
+  border: 2px solid #2c2c2c;
+}
+
+Így az lesz a probléma, hogyha megnyomjuk a black-key-t, akkor nem csak annak fog az :active megváltozni a background meg a border 
+hanem a white-key-nek is, mert abban van benne és mi meg azt szeretnénk, hogy csak a fekete legyen megváltoztatva 
+->
+<div className="white-key">
+    <div className="black-key"></div>
+</div>
+-> 
+erre a megoldás, hogy csináltunk két osztályt 
+black-key-pressed és a white-key-pressed
+és van ez a stopPropagation() és ezzel fogunk operálni, hogy lenyomjuk a black-key-t és van szűlőeleme, akkor az is le lesz nyomodva, tehát 
+a white-key!!!
+kivéve, ha azt mondjuk neki, hogy stopPropagation()!!!!
+*/
+
+.white-key-pressed {
+  background-color: #ededed;
+  border: 2px solid #bababa;
+}
+
+.black-key-pressed {
+  background-color:#5b5b5b;
+  border: 2px solid #2c2c2c;
+}
+
+
